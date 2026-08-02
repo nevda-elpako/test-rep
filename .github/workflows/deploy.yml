@@ -5,17 +5,21 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Pushes the built dist/ output straight to a gh-pages branch rather than
+# using the Actions Artifacts API (upload-pages-artifact + deploy-pages) —
+# this enterprise instance's Actions artifact storage quota is exhausted,
+# and this path doesn't depend on it. Pages is configured to serve from
+# the gh-pages branch (legacy/branch build_type), same as how the original
+# static-site repo's Pages is already set up.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
     # GitHub-hosted runners are disabled on this Enterprise instance —
     # targets the self-hosted runner registered for this repo instead.
     runs-on: [self-hosted, Windows, X64]
@@ -35,20 +39,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload build artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    # GitHub-hosted runners are disabled on this Enterprise instance —
-    # targets the self-hosted runner registered for this repo instead.
-    runs-on: [self-hosted, Windows, X64]
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Deploy to gh-pages branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan gh-pages-deploy
+          git rm -rf . > /dev/null 2>&1 || true
+          cp -r dist/. .
+          touch .nojekyll
+          git add -A
+          git commit -m "Deploy ${{ github.sha }}"
+          git push origin HEAD:gh-pages --force
