@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
 import { useEffect, useRef, useState } from "react";
 
+const SHOW_NAV_LINKS = false;
+
 export function TopBar() {
   const { authenticatedUser } = useSession();
   const [open, setOpen] = useState(false);
@@ -36,18 +38,25 @@ export function TopBar() {
         </Link>
 
         <nav className="topbar-nav">
-          <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
-            Admin
-          </a>
-          <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
-            Mano dokumentai
-          </a>
-          <Link to="/dashboard" className="nav-link">
-            Pasirašyti dokumentą
-          </Link>
-          <Link to="/dashboard" className="nav-link">
-            Patikrinti dokumentą
-          </Link>
+          {/* Nav links hidden for now (still non-functional stubs / just
+              duplicate the dashboard's own upload cards) — re-enable by
+              uncommenting when there's somewhere for them to actually go. */}
+          {SHOW_NAV_LINKS && (
+            <>
+              <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
+                Admin
+              </a>
+              <a href="#" className="nav-link" onClick={(e) => e.preventDefault()}>
+                Mano dokumentai
+              </a>
+              <Link to="/dashboard" className="nav-link">
+                Pasirašyti dokumentą
+              </Link>
+              <Link to="/dashboard" className="nav-link">
+                Patikrinti dokumentą
+              </Link>
+            </>
+          )}
 
           <div className="user-menu" ref={menuRef}>
             <button
