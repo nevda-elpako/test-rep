@@ -5,6 +5,7 @@ import { Dropzone } from "../components/Dropzone";
 import { useSession } from "../context/SessionContext";
 import { computeSha256Digest, readFileAsBase64 } from "../services/elpakoApi";
 import { formatFileSize, getExtension } from "../utils/files";
+import { SHOW_PARTICIPANTS } from "../featureFlags";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -193,6 +194,7 @@ export function SignDocumentPage() {
           </div>
         </section>
 
+        {SHOW_PARTICIPANTS && (
         <section className="doc-section">
           <h1 className="section-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -314,6 +316,7 @@ export function SignDocumentPage() {
             )}
           </div>
         </section>
+        )}
 
         <div className="continue-btn-wrap">
           <button type="button" className="continue-btn" onClick={handleContinue}>

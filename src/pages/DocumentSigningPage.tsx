@@ -14,6 +14,7 @@ import {
   type SignedFile,
 } from "../services/elpakoApi";
 import { formatFileSize } from "../utils/files";
+import { SHOW_PARTICIPANTS } from "../featureFlags";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -332,6 +333,7 @@ export function DocumentSigningPage() {
           </div>
         </section>
 
+        {SHOW_PARTICIPANTS && (
         <section className="doc-section">
           <h2 className="section-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -445,6 +447,7 @@ export function DocumentSigningPage() {
             )}
           </div>
         </section>
+        )}
 
         <section className="doc-section">
           <h2 className="section-title">

@@ -3,6 +3,7 @@ import { TopBar } from "../components/TopBar";
 import { ParticipantsList, type Participant } from "../components/ParticipantsList";
 import { useSession } from "../context/SessionContext";
 import { getExtension, formatFileSize } from "../utils/files";
+import { SHOW_PARTICIPANTS } from "../featureFlags";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -192,6 +193,7 @@ export function VerifyDocumentPage() {
           </div>
         </section>
 
+        {SHOW_PARTICIPANTS && (
         <section className="doc-section">
           <h2 className="section-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -300,6 +302,7 @@ export function VerifyDocumentPage() {
             )}
           </div>
         </section>
+        )}
       </div>
     </>
   );
