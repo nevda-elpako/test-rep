@@ -1,7 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useApiConfig } from "../context/ApiConfigContext";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { hasAccessToken } = useApiConfig();
+
+  // No point offering login methods before the API connection is set up —
+  // send the user to Settings first.
+  if (!hasAccessToken) {
+    return <Navigate to="/settings" replace />;
+  }
 
   return (
     <div className="card">
