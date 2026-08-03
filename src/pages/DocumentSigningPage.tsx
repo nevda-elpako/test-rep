@@ -270,7 +270,6 @@ export function DocumentSigningPage() {
       <div className="doc-hero">
         <div className="doc-hero-inner">
           <h1>Dokumento pasirašymas</h1>
-          <p>Liko 6 iš 6 pasirašymų ir 2 iš 6 nemokamų patikrinimų iki 2026-08-29</p>
         </div>
       </div>
 
@@ -544,8 +543,6 @@ export function DocumentSigningPage() {
                 </button>
               ))}
             </div>
-
-            <p className="quota-text">Liko 6 iš 6 pasirašymų ir 2 iš 6 nemokamų patikrinimų iki 2026-08-29</p>
 
             {activeMethod === "mobile-id" && (
               <div className="method-panel">

@@ -122,7 +122,6 @@ export function VerifyDocumentPage() {
       <div className="doc-hero">
         <div className="doc-hero-inner">
           <h1>Dokumento peržiūra</h1>
-          <p>Liko 6 iš 6 pasirašymų ir 3 iš 6 nemokamų patikrinimų iki 2026-08-29</p>
         </div>
       </div>
 

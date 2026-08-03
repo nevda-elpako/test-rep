@@ -51,7 +51,6 @@ export function DashboardPage() {
             <br />
             pasirašymas su elpako
           </h1>
-          <p>6 pasirašymai ir 6 dokumentų tikrinimai per mėnesį nemokamai</p>
         </section>
 
         <section className="upload-section">
