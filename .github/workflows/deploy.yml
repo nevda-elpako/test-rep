@@ -44,6 +44,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # This self-hosted runner reuses its working directory across
+          # runs (unlike ephemeral hosted runners), so a leftover local
+          # branch from a previous run must be cleaned up first.
+          git branch -D gh-pages-deploy > /dev/null 2>&1 || true
           git checkout --orphan gh-pages-deploy
           git rm -rf . > /dev/null 2>&1 || true
           cp -r dist/. .
