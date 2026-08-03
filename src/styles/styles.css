@@ -25,7 +25,13 @@ html, body {
   margin: 0;
 }
 
-body {
+/* Scoped to a wrapper (via AuthLayout) rather than a bare `body` selector —
+   this stylesheet is loaded globally across the whole SPA (unlike the
+   static site, where it was only ever loaded on these specific pages), so
+   a global `body` flex-center would also apply to the long dashboard/
+   document pages and hide their content above the fold. */
+.auth-shell {
+  min-height: 100%;
   background: var(--bg);
   font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   display: flex;
