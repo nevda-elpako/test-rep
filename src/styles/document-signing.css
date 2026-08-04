@@ -542,7 +542,119 @@
   border-color: var(--green);
 }
 
+/* "Custom" position option: centered/larger checkmark instead of a
+   small corner badge, since there's no fixed corner to point at. */
+.position-preview.custom-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.position-badge.corner-center {
+  position: static;
+  width: 30px;
+  height: 30px;
+}
+
+.position-badge.corner-center svg {
+  width: 16px;
+  height: 16px;
+}
+
+.custom-position-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.custom-position-field {
+  width: 190px;
+  min-height: 52px;
+  padding: 8px 14px;
+}
+
+.custom-position-field input {
+  font-size: 15px;
+}
+
+.mini-doc-preview {
+  display: flex;
+  align-items: flex-start;
+}
+
+.mini-doc {
+  position: relative;
+  width: 92px;
+  height: 118px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 12px 10px;
+  box-shadow: 0 6px 16px rgba(30, 40, 90, 0.06);
+}
+
+.mini-doc-header {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.mini-doc-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-doc-line {
+  height: 2px;
+  border-radius: 1px;
+  background: var(--field-border);
+}
+
+.mini-doc-check {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #ffffff;
+}
+
+.mini-doc-check svg {
+  width: 14px;
+  height: 14px;
+}
+
+.field select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--text-dark);
+  font-weight: 500;
+  padding: 0;
+  width: 100%;
+  appearance: none;
+}
+
+.signature-viz-type-field {
+  margin-top: 24px;
+  max-width: 340px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238890b5' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
 .signature-preview-card {
+  margin-top: 20px;
   border: 1px solid var(--field-border);
   border-radius: 14px;
   padding: 22px 26px;

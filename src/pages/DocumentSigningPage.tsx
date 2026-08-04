@@ -20,7 +20,7 @@ import { LtIdIcon, ZealIdIcon } from "../components/icons/AuthMethodIcons";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type MethodKey = "smart-id" | "mobile-id" | "usb" | "lt-id" | "zealid";
-type SignaturePosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+type SignaturePosition = "top-left" | "top-right" | "bottom-left" | "bottom-right" | "custom";
 
 // Used only when the page is opened directly (no handoff data from
 // sign-document), so the page can still be previewed/demoed on its own.
@@ -51,6 +51,10 @@ export function DocumentSigningPage() {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [willSign, setWillSign] = useState(session.willSign);
   const [signaturePosition, setSignaturePosition] = useState<SignaturePosition>("top-left");
+  const [customPage, setCustomPage] = useState(1);
+  const [customX, setCustomX] = useState(0);
+  const [customY, setCustomY] = useState(0);
+  const [signatureVizType, setSignatureVizType] = useState("text-and-logo");
   const [activeMethod, setActiveMethod] = useState<MethodKey>("smart-id");
   const [signedFile, setSignedFile] = useState<SignedFile | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -207,11 +211,12 @@ export function DocumentSigningPage() {
     setParticipants((prev) => prev.filter((p) => p.id !== id));
   }
 
-  const positions: { key: SignaturePosition; label: string; cornerClass: string }[] = [
+  const positions: { key: SignaturePosition; label: string; cornerClass?: string }[] = [
     { key: "top-left", label: "Viršus kairė", cornerClass: "corner-top-left" },
     { key: "top-right", label: "Viršus dešinė", cornerClass: "corner-top-right" },
     { key: "bottom-left", label: "Apačia kairė", cornerClass: "corner-bottom-left" },
     { key: "bottom-right", label: "Apačia dešinė", cornerClass: "corner-bottom-right" },
+    { key: "custom", label: "Custom" },
   ];
 
   const methods: { key: MethodKey; label: string; icon: React.ReactNode; disabled?: boolean }[] = [
@@ -469,8 +474,8 @@ export function DocumentSigningPage() {
                     className={"position-option" + (signaturePosition === p.key ? " selected" : "")}
                     onClick={() => setSignaturePosition(p.key)}
                   >
-                    <span className="position-preview">
-                      <span className={"position-badge " + p.cornerClass}>
+                    <span className={"position-preview" + (p.key === "custom" ? " custom-preview" : "")}>
+                      <span className={"position-badge " + (p.cornerClass ?? "corner-center")}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
@@ -482,35 +487,88 @@ export function DocumentSigningPage() {
                 ))}
               </div>
 
-              <div className="signature-preview-card">
-                <div className="sig-name">Vardenis Pavardenis</div>
-                <div className="sig-date">2021-04-22</div>
-                <div className="sig-meta">
-                  <svg className="sig-badge" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="64" height="64" rx="16" fill="#20a866"></rect>
-                    <path
-                      d="M20 10 C20 6 23 4 26 6 C28 8 27 11 25 12"
-                      stroke="#ffffff"
-                      strokeWidth="3.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    ></path>
-                    <path
-                      d="M25 12 L14 46 C13 50 16 54 20 54 C23 54 25 52 26 49 L32 30 L38 49 C39 52 41 54 44 54 C48 54 51 50 50 46 L39 12"
-                      stroke="#ffffff"
-                      strokeWidth="3.4"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    ></path>
-                    <path d="M25 12 C29 16 35 16 39 12" stroke="#ffffff" strokeWidth="3.4" strokeLinecap="round" fill="none"></path>
-                    <circle cx="30" cy="18" r="1.8" fill="#ffffff"></circle>
-                  </svg>
-                  <div>
-                    <div className="sig-meta-title">Kvalifikuotas el. parašas</div>
-                    <div className="sig-domain">elpako.eu</div>
+              {signaturePosition === "custom" && (
+                <>
+                  <div className="custom-position-fields">
+                    <div className="field custom-position-field">
+                      <div className="field-label">Puslapio numeris</div>
+                      <input
+                        type="number"
+                        min={1}
+                        value={customPage}
+                        onChange={(e) => setCustomPage(Number(e.target.value))}
+                      />
+                    </div>
+                    <div className="field custom-position-field">
+                      <div className="field-label">X ašis</div>
+                      <input type="number" value={customX} onChange={(e) => setCustomX(Number(e.target.value))} />
+                    </div>
+                    <div className="field custom-position-field">
+                      <div className="field-label">Y ašis</div>
+                      <input type="number" value={customY} onChange={(e) => setCustomY(Number(e.target.value))} />
+                    </div>
                   </div>
+
+                  <div className="mini-doc-preview">
+                    <div className="mini-doc">
+                      <div className="mini-doc-header"></div>
+                      <div className="mini-doc-lines">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <div className="mini-doc-line" key={i}></div>
+                        ))}
+                      </div>
+                      <span
+                        className="mini-doc-check"
+                        style={{
+                          left: Math.min(100, Math.max(0, customX)) + "%",
+                          top: Math.min(100, Math.max(0, customY)) + "%",
+                        }}
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="field signature-viz-type-field">
+              <div className="field-label">Parašo vizualizacijos tipas</div>
+              <select value={signatureVizType} onChange={(e) => setSignatureVizType(e.target.value)}>
+                <option value="text-and-logo">Tekstas ir logo</option>
+              </select>
+            </div>
+
+            <div className="signature-preview-card">
+              <div className="sig-name">{currentUserName}</div>
+              <div className="sig-date">{formatTimestamp(new Date()).split(" ")[0]}</div>
+              <div className="sig-meta">
+                <svg className="sig-badge" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="0" y="0" width="64" height="64" rx="16" fill="#20a866"></rect>
+                  <path
+                    d="M20 10 C20 6 23 4 26 6 C28 8 27 11 25 12"
+                    stroke="#ffffff"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  ></path>
+                  <path
+                    d="M25 12 L14 46 C13 50 16 54 20 54 C23 54 25 52 26 49 L32 30 L38 49 C39 52 41 54 44 54 C48 54 51 50 50 46 L39 12"
+                    stroke="#ffffff"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  ></path>
+                  <path d="M25 12 C29 16 35 16 39 12" stroke="#ffffff" strokeWidth="3.4" strokeLinecap="round" fill="none"></path>
+                  <circle cx="30" cy="18" r="1.8" fill="#ffffff"></circle>
+                </svg>
+                <div>
+                  <div className="sig-meta-title">Kvalifikuotas elektroninis parašas (QES)</div>
+                  <div className="sig-domain">elpako.com</div>
                 </div>
               </div>
             </div>
