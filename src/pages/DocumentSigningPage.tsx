@@ -15,10 +15,11 @@ import {
 } from "../services/elpakoApi";
 import { formatFileSize } from "../utils/files";
 import { SHOW_PARTICIPANTS } from "../featureFlags";
+import { LtIdIcon, ZealIdIcon } from "../components/icons/AuthMethodIcons";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type MethodKey = "mobile-id" | "usb" | "advanced" | "smart-id";
+type MethodKey = "smart-id" | "mobile-id" | "usb" | "lt-id" | "zealid";
 type SignaturePosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
 // Used only when the page is opened directly (no handoff data from
@@ -50,7 +51,7 @@ export function DocumentSigningPage() {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [willSign, setWillSign] = useState(session.willSign);
   const [signaturePosition, setSignaturePosition] = useState<SignaturePosition>("top-left");
-  const [activeMethod, setActiveMethod] = useState<MethodKey>("mobile-id");
+  const [activeMethod, setActiveMethod] = useState<MethodKey>("smart-id");
   const [signedFile, setSignedFile] = useState<SignedFile | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -215,6 +216,18 @@ export function DocumentSigningPage() {
 
   const methods: { key: MethodKey; label: string; icon: React.ReactNode; disabled?: boolean }[] = [
     {
+      key: "smart-id",
+      label: "Smart-ID",
+      icon: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 2 A10 10 0 0 1 12 22" strokeLinecap="round"></path>
+          <path d="M12 2 A10 10 0 0 0 12 22" strokeLinecap="round" strokeDasharray="2 3"></path>
+          <line x1="11.3" y1="9" x2="11.3" y2="16" strokeLinecap="round"></line>
+          <circle cx="11.3" cy="6.2" r="1" fill="currentColor" stroke="none"></circle>
+        </svg>
+      ),
+    },
+    {
       key: "mobile-id",
       label: "Mobile-ID",
       icon: (
@@ -226,7 +239,7 @@ export function DocumentSigningPage() {
     },
     {
       key: "usb",
-      label: "USB parašas",
+      label: "USB parašas/Asmens tapatybės kortelė",
       disabled: true,
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -236,28 +249,16 @@ export function DocumentSigningPage() {
       ),
     },
     {
-      key: "advanced",
-      label: "Pažangusis parašas",
+      key: "lt-id",
+      label: "LT-ID",
       disabled: true,
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <rect x="3" y="5" width="18" height="12" rx="1.6"></rect>
-          <line x1="8" y1="20" x2="16" y2="20" strokeLinecap="round"></line>
-          <line x1="12" y1="17" x2="12" y2="20" strokeLinecap="round"></line>
-        </svg>
-      ),
+      icon: <LtIdIcon />,
     },
     {
-      key: "smart-id",
-      label: "Smart-ID",
-      icon: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 2 A10 10 0 0 1 12 22" strokeLinecap="round"></path>
-          <path d="M12 2 A10 10 0 0 0 12 22" strokeLinecap="round" strokeDasharray="2 3"></path>
-          <line x1="11.3" y1="9" x2="11.3" y2="16" strokeLinecap="round"></line>
-          <circle cx="11.3" cy="6.2" r="1" fill="currentColor" stroke="none"></circle>
-        </svg>
-      ),
+      key: "zealid",
+      label: "zealID",
+      disabled: true,
+      icon: <ZealIdIcon />,
     },
   ];
 
@@ -596,13 +597,19 @@ export function DocumentSigningPage() {
 
             {activeMethod === "usb" && (
               <div className="method-panel">
-                <div className="method-placeholder">Pasirašymas USB parašu bus įgyvendintas vėliau.</div>
+                <div className="method-placeholder">Pasirašymas USB parašu/asmens tapatybės kortele bus įgyvendintas vėliau.</div>
               </div>
             )}
 
-            {activeMethod === "advanced" && (
+            {activeMethod === "lt-id" && (
               <div className="method-panel">
-                <div className="method-placeholder">Pasirašymas pažangiuoju parašu bus įgyvendintas vėliau.</div>
+                <div className="method-placeholder">Pasirašymas LT-ID bus įgyvendintas vėliau.</div>
+              </div>
+            )}
+
+            {activeMethod === "zealid" && (
+              <div className="method-panel">
+                <div className="method-placeholder">Pasirašymas zealID bus įgyvendintas vėliau.</div>
               </div>
             )}
 
