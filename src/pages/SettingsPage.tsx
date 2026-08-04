@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApiConfig } from "../context/ApiConfigContext";
+import { Toast } from "../components/Toast";
+
+const TOAST_DURATION_MS = 1800;
 
 export function SettingsPage() {
   const navigate = useNavigate();
   const { config, setConfig } = useApiConfig();
   const [baseUrl, setBaseUrl] = useState(config.baseUrl);
   const [accessToken, setAccessToken] = useState(config.accessToken);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (!showToast) return;
+    const timer = setTimeout(() => navigate("/"), TOAST_DURATION_MS);
+    return () => clearTimeout(timer);
+  }, [showToast, navigate]);
 
   return (
     <div className="card">
@@ -31,7 +41,7 @@ export function SettingsPage() {
         onSubmit={(e) => {
           e.preventDefault();
           setConfig({ baseUrl: baseUrl.trim(), accessToken: accessToken.trim() });
-          navigate("/");
+          setShowToast(true);
         }}
       >
         <div className="form-fields">
@@ -62,6 +72,8 @@ export function SettingsPage() {
           Išsaugoti
         </button>
       </form>
+
+      {showToast && <Toast message="API raktas sėkmingai pridėtas" />}
     </div>
   );
 }
