@@ -82,60 +82,39 @@ body {
   color: var(--accent);
 }
 
-.user-menu {
-  position: relative;
-}
-
-.user-menu-btn {
+.topbar-user {
   display: flex;
   align-items: center;
-  gap: 6px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 15.5px;
-  font-weight: 600;
-  color: var(--text-dark);
-  padding: 6px 2px;
+  gap: 12px;
   white-space: nowrap;
 }
 
-.user-menu-btn svg {
-  width: 16px;
-  height: 16px;
-  color: var(--text-faint);
-  transition: transform 0.15s ease;
-}
-
-.user-menu-btn[aria-expanded="true"] svg {
-  transform: rotate(180deg);
-}
-
-.user-menu-dropdown {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  background: var(--white);
-  border: 1px solid var(--field-border);
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(30, 40, 90, 0.12);
-  padding: 8px;
-  min-width: 180px;
-  z-index: 20;
-}
-
-.user-menu-dropdown a {
-  display: block;
-  padding: 9px 12px;
-  border-radius: 8px;
-  font-size: 14.5px;
+.topbar-user-name {
+  font-size: 15.5px;
   font-weight: 600;
   color: var(--text-dark);
-  text-decoration: none;
 }
 
-.user-menu-dropdown a:hover {
+.topbar-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.topbar-logout-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.topbar-logout-btn:hover {
   background: var(--bg);
   color: var(--accent);
 }

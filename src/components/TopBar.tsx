@@ -1,34 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
-import { useEffect, useRef, useState } from "react";
 
 const SHOW_NAV_LINKS = false;
 
 export function TopBar() {
-  const { authenticatedUser } = useSession();
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { authenticatedUser, setAuthenticatedUser, setMobileIdLogin, setSmartIdLogin } = useSession();
 
   const displayName = authenticatedUser
     ? [authenticatedUser.name, authenticatedUser.surname].filter(Boolean).join(" ")
     : "DummyName DummySurname";
 
-  useEffect(() => {
-    function onDocumentClick(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    document.addEventListener("click", onDocumentClick);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("click", onDocumentClick);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
+  function handleLogout() {
+    setAuthenticatedUser(null);
+    setMobileIdLogin(null);
+    setSmartIdLogin(null);
+    navigate("/");
+  }
 
   return (
     <header className="topbar">
@@ -58,29 +46,15 @@ export function TopBar() {
             </>
           )}
 
-          <div className="user-menu" ref={menuRef}>
-            <button
-              type="button"
-              className="user-menu-btn"
-              aria-expanded={open}
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen((o) => !o);
-              }}
-            >
-              <span>{displayName}</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
+          <div className="topbar-user">
+            <span className="topbar-user-name">{displayName}</span>
+            <button type="button" className="topbar-logout-btn" aria-label="Atsijungti" title="Atsijungti" onClick={handleLogout}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"></path>
+                <path d="M13 16l4-4-4-4"></path>
+                <path d="M17 12H8"></path>
               </svg>
             </button>
-            <div className="user-menu-dropdown" hidden={!open}>
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                Mano paskyra
-              </a>
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                Atsijungti
-              </a>
-            </div>
           </div>
         </nav>
       </div>
