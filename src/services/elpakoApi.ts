@@ -1,16 +1,20 @@
 // ----------------------------------------------------------------------
-// Elpako API client. Talks directly to the Elpako REST API from the
-// browser — base URL + access_token are passed in explicitly (supplied
-// by ApiConfigContext) rather than read from a global, so this module
-// stays framework-agnostic and testable.
+// Elpako API client. Talks to our own same-origin Netlify Function
+// (netlify/functions/elpako-proxy.mts), which forwards to the real
+// Elpako staging API — this avoids CORS and keeps the shared demo
+// access_token out of client-side code entirely. A visitor's own
+// assigned access_token (if any) is passed in explicitly (supplied by
+// ApiConfigContext); when omitted, the proxy falls back to the shared
+// demo token.
 //
 // Endpoint paths were taken from Elpako's Postman documentation
 // (collection id 40d77160-1d63-4378-a295-b0444491bad8). If the API
 // changes, re-check that collection before assuming these are stale.
 // ----------------------------------------------------------------------
 
+const PROXY_BASE_URL = "/api";
+
 export interface ApiConfig {
-  baseUrl: string;
   accessToken: string;
 }
 
@@ -124,7 +128,7 @@ type Fields = Record<string, string | undefined>;
 
 function apiUrl(config: ApiConfig, path: string): string {
   const separator = path.includes("?") ? "&" : "?";
-  return config.baseUrl.replace(/\/+$/, "") + path + separator + "access_token=" + encodeURIComponent(config.accessToken);
+  return PROXY_BASE_URL + path + separator + "access_token=" + encodeURIComponent(config.accessToken);
 }
 
 function toFormData(fields?: Fields): FormData {

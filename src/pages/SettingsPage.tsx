@@ -8,7 +8,6 @@ const TOAST_DURATION_MS = 1800;
 export function SettingsPage() {
   const navigate = useNavigate();
   const { config, setConfig } = useApiConfig();
-  const [baseUrl, setBaseUrl] = useState(config.baseUrl);
   const [accessToken, setAccessToken] = useState(config.accessToken);
   const [showToast, setShowToast] = useState(false);
 
@@ -34,29 +33,24 @@ export function SettingsPage() {
 
       <h1>API prisijungimas</h1>
       <p className="subtitle">
-        Šis demo puslapis kalbasi tiesiogiai su Elpako API iš naršyklės. Įveskite savo aplinkos adresą ir jums suteiktą access_token.
+        Jei jums buvo priskirtas asmeninis access_token, įveskite jį čia. Jo nenurodžius, bus naudojamas bendras demonstracinis raktas.
       </p>
 
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          setConfig({ baseUrl: baseUrl.trim(), accessToken: accessToken.trim() });
+          setConfig({ accessToken: accessToken.trim() });
           setShowToast(true);
         }}
       >
         <div className="form-fields">
-          <div className="field">
-            <div className="field-label">API adresas (base URL)</div>
-            <input type="text" autoComplete="off" spellCheck={false} value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} />
-          </div>
-
           <div className="field">
             <div className="field-label">Access token</div>
             <input
               type="text"
               autoComplete="off"
               spellCheck={false}
-              placeholder="Gautas iš Elpako"
+              placeholder="Gautas iš Elpako (nebūtina)"
               value={accessToken}
               onChange={(e) => setAccessToken(e.target.value)}
             />
@@ -64,8 +58,8 @@ export function SettingsPage() {
         </div>
 
         <p className="consent">
-          Šis raktas išsaugomas tik jūsų naršyklėje (localStorage) ir naudojamas tiesiogiai kviečiant Elpako API — jis niekur kitur
-          nesiunčiamas.
+          Šis raktas išsaugomas tik jūsų naršyklėje (localStorage) ir siunčiamas per mūsų serverio tarpinę stotelę (proxy) — jis niekada
+          nesiunčiamas tiesiogiai iš naršyklės į Elpako API.
         </p>
 
         <button className="submit-btn" type="submit">

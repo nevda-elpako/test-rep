@@ -1,7 +1,6 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { ApiConfigProvider } from "./context/ApiConfigContext";
 import { SessionProvider } from "./context/SessionContext";
-import { ApiConnectionBanner } from "./components/ApiConnectionBanner";
 import { AuthLayout } from "./components/AuthLayout";
 import { LoginPage } from "./pages/LoginPage";
 import { MobileIdPage } from "./pages/MobileIdPage";
@@ -19,7 +18,6 @@ function App() {
     <ApiConfigProvider>
       <SessionProvider>
         <HashRouter>
-          <ApiConnectionBanner />
           <Routes>
             <Route element={<AuthLayout />}>
               <Route path="/" element={<LoginPage />} />

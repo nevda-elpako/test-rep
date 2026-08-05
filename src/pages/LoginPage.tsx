@@ -1,5 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useApiConfig } from "../context/ApiConfigContext";
+import { Link, useNavigate } from "react-router-dom";
 import { LtIdIcon, ZealIdIcon } from "../components/icons/AuthMethodIcons";
 
 const CHEVRON = (
@@ -10,13 +9,6 @@ const CHEVRON = (
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { hasAccessToken } = useApiConfig();
-
-  // No point offering login methods before the API connection is set up —
-  // send the user to Settings first.
-  if (!hasAccessToken) {
-    return <Navigate to="/settings" replace />;
-  }
 
   function stub(label: string) {
     alert('Autentifikacijos veiksmas („' + label + '“) bus įgyvendintas vėliau.');
