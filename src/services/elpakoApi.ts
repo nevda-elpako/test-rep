@@ -12,8 +12,6 @@
 // changes, re-check that collection before assuming these are stale.
 // ----------------------------------------------------------------------
 
-const PROXY_BASE_URL = "/api";
-
 export interface ApiConfig {
   accessToken: string;
 }
@@ -127,8 +125,11 @@ export class ApiError extends Error {
 type Fields = Record<string, string | undefined>;
 
 function apiUrl(config: ApiConfig, path: string): string {
+  // path is already rooted at /api/v1/... (Elpako's own endpoint paths,
+  // which are also our proxy's routing prefix in netlify.toml) — no
+  // separate base URL to prepend.
   const separator = path.includes("?") ? "&" : "?";
-  return PROXY_BASE_URL + path + separator + "access_token=" + encodeURIComponent(config.accessToken);
+  return path + separator + "access_token=" + encodeURIComponent(config.accessToken);
 }
 
 function toFormData(fields?: Fields): FormData {
