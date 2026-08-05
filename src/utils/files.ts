@@ -25,3 +25,18 @@ export function formatFileSize(bytes: number): string {
   const mb = kb / 1024;
   return mb.toFixed(1).replace(".", ",") + " MB";
 }
+
+const MIME_TYPES: Record<string, string> = {
+  ".pdf": "application/pdf",
+};
+
+export function mimeTypeForExtension(ext: string): string {
+  return MIME_TYPES[ext] || "application/octet-stream";
+}
+
+export function base64ToBlob(base64: string, mimeType: string): Blob {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: mimeType });
+}

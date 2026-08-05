@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { TopBar } from "../components/TopBar";
 import { ParticipantsList, type Participant } from "../components/ParticipantsList";
 import { useSession } from "../context/SessionContext";
-import { getExtension, formatFileSize } from "../utils/files";
+import { getExtension, formatFileSize, mimeTypeForExtension, base64ToBlob } from "../utils/files";
+import type { DocumentMeta } from "../context/SessionContext";
 import { SHOW_PARTICIPANTS } from "../featureFlags";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -116,6 +117,25 @@ export function VerifyDocumentPage() {
     setParticipants((prev) => prev.filter((p) => p.id !== id));
   }
 
+  function openDocumentPreview(doc: DocumentMeta) {
+    if (!doc.contentBase64) return;
+    const blob = base64ToBlob(doc.contentBase64, mimeTypeForExtension(getExtension(doc.name)));
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+
+  function downloadDocument(doc: DocumentMeta) {
+    if (!doc.contentBase64) return;
+    const blob = base64ToBlob(doc.contentBase64, mimeTypeForExtension(getExtension(doc.name)));
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = doc.name;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <>
       <TopBar />
@@ -173,14 +193,14 @@ export function VerifyDocumentPage() {
                   </svg>
                   Išsaugoti
                 </button>
-                <button type="button" className="doc-file-action" onClick={() => console.log("preview-doc-btn stub clicked", document_)}>
+                <button type="button" className="doc-file-action" onClick={() => openDocumentPreview(document_)}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
                   Peržiūrėti
                 </button>
-                <button type="button" className="doc-file-action" onClick={() => console.log("download-doc-btn stub clicked", document_)}>
+                <button type="button" className="doc-file-action" onClick={() => downloadDocument(document_)}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M12 4v11"></path>
                     <path d="M7.5 11.5 12 16l4.5-4.5"></path>

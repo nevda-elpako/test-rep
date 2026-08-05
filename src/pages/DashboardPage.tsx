@@ -36,7 +36,7 @@ export function DashboardPage() {
       result = { errors: [{ message: err instanceof Error ? err.message : "Nepavyko patikrinti dokumento.", error_code: 0 }] };
     }
 
-    setVerifySession({ document: { name: file.name, size: file.size }, result });
+    setVerifySession({ document: { name: file.name, size: file.size, contentBase64 }, result });
     navigate("/verify-document");
   }
 
