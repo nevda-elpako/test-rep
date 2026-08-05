@@ -1,3 +1,9 @@
+## Testavimas
+
+Veikianti testinė aplinka: [https://lets-sign.netlify.app/](https://lets-sign.netlify.app/)
+
+API dokumentacija: [https://documenter.getpostman.com/view/11918038/T17FATVh#intro](https://documenter.getpostman.com/view/11918038/T17FATVh#intro)
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
